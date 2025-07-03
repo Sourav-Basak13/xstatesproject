@@ -41,13 +41,14 @@ function App() {
       .catch((error) => console.error(error.message));
   }, []);
   useEffect(() => {
-    fetchAllStates(placeDetails?.country)
-      .then((data) => setStates(data))
-      .catch((error) => console.error(error.message));
+    !!placeDetails?.country?.length &&
+      fetchAllStates(placeDetails?.country)
+        .then((data) => setStates(data))
+        .catch((error) => console.error(error.message));
   }, [placeDetails?.country]);
   useEffect(() => {
-    placeDetails?.state?.length &&
-      placeDetails?.country?.length &&
+    !!placeDetails?.state?.length &&
+      !!placeDetails?.country?.length &&
       fetchAllCities(placeDetails?.country, placeDetails?.state)
         .then((data) => setCities(data))
         .catch((error) => console.error(error.message));
@@ -70,6 +71,8 @@ function App() {
             setPlaceDetails((prev) => ({
               ...prev,
               country: e.target.value,
+              state: "",
+              city: "",
             }))
           }
         >
@@ -87,6 +90,7 @@ function App() {
             setPlaceDetails((prev) => ({
               ...prev,
               state: e.target.value,
+              city: "",
             }))
           }
           disabled={!placeDetails.country.length}
@@ -107,7 +111,7 @@ function App() {
               city: e.target.value,
             }))
           }
-          disabled={!placeDetails.country.length && !placeDetails.state.length}
+          disabled={!placeDetails.state.length}
         >
           <option value="">Select City</option>
           {cities?.map((city_name) => (
